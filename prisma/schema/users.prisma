@@ -1,0 +1,17 @@
+model users {
+  id         Int       @id @default(autoincrement())
+  name       String     @unique @db.VarChar(25)
+  email      String    @unique @db.VarChar(40)
+  password   String    @db.VarChar(80)
+  role_id    Int 
+  created_at DateTime  @default(now()) @db.Timestamp()
+  updated_at DateTime  @default(now()) @updatedAt @db.Timestamp()
+  deleted_at DateTime? @db.Timestamp()
+
+  
+  role    roles    @relation(fields: [role_id], references: [id])
+  artists artists[] 
+  venues  venues[]  
+
+  @@index([email])
+}

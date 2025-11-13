@@ -1,0 +1,22 @@
+enum VenueCategory {
+  Hotel
+  Bar
+  Restaurant
+  Club
+}
+
+model venues {
+  id         Int             @id @default(autoincrement())
+  owner_id   Int             
+  category   VenueCategory
+  name       String          @db.VarChar(30)
+  address    String          @db.Text
+  created_at DateTime        @default(now()) @db.Timestamp()
+  updated_at DateTime        @default(now()) @updatedAt @db.Timestamp()
+  deleted_at DateTime?       @db.Timestamp()
+
+  owner  users     @relation(fields: [owner_id], references: [id])
+  events events[]  
+
+  @@index([owner_id]) 
+}

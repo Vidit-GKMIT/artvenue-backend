@@ -11,10 +11,10 @@ app.use(cookieParser())
 app.use('/auth', authRouter)
 
 app.get('/', async (req, res) => {
-    console.log('Bakcend Working...!!')
-})
+    res.status(200).json({ message: 'Backend is running...' })
+});
 
-app.use((err, req, res) => {
+app.use((err, req, res, next) => {
     return res.status(500).json({
         message: 'Something went wrong!!',
         err: err.message,
