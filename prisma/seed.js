@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
-async function insertInRoles() {
+async function createRoles() {
     const data = await prisma.roles.createMany({
         data: [{ role: 'Artist' }, { role: 'Owner' }],
     })
@@ -9,7 +9,7 @@ async function insertInRoles() {
     console.log('Data is inserted in roles table', data)
 }
 
-async function insertInCategories() {
+async function createCategories() {
     const data = await prisma.categories.createMany({
         data: [
             { category_name: 'Singing' },
@@ -23,5 +23,5 @@ async function insertInCategories() {
 }
 
 
-insertInRoles()
-insertInCategories()
+createRoles()
+createCategories()
