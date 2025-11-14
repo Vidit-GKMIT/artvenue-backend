@@ -25,7 +25,6 @@ export const sendOtpEmail = async (
     from: `"${process.env.APP_NAME}" <${process.env.EMAIL}>`,
     to: recipientEmail,
     subject: `${process.env.OTP_EMAIL_SUBJECT}`,
-    text: `Your verification code is: ${otp}. This code will expire in 5 minutes.`,
     html: html
   })
   return info

@@ -8,7 +8,7 @@ export const verifyEmail = async (req, res) => {
 
         if (existedEmail) {
             return res
-                .status(400)
+                .status(409)
                 .json({ message: 'Email already exists', success: false })
         }
 
