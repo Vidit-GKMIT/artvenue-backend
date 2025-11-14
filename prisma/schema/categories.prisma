@@ -1,0 +1,10 @@
+model categories {
+  id            Int                @id @default(autoincrement())
+  category_name String             @unique @db.VarChar(30)
+  created_at    DateTime           @default(now()) @db.Timestamp()
+  updated_at    DateTime           @default(now()) @updatedAt @db.Timestamp()
+  deleted_at    DateTime?          @db.Timestamp()
+
+  artist_categories artist_categories[]
+  event_categories  event_categories[]
+}

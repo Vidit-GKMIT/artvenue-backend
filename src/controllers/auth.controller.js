@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { prisma } from '../db/postgres.db.js'
 
 export const register = (req,res) => {
     return res.status(200).json({ message: "register route" });
