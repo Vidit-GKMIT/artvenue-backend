@@ -1,6 +1,11 @@
 import express from 'express'
-import { ownerRegister, login, logout, artistRegister } from '../controllers/auth.controller.js'
-import { verifyEmail } from '../services/verifyEmail.service.js'
+import {
+  ownerRegister,
+  login,
+  logout,
+  artistRegister
+} from '../controllers/auth.controller.js'
+import { verifyEmail } from '../services/auth.service.js'
 
 const router = express.Router()
 
