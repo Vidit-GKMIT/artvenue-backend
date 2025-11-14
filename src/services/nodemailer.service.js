@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer'
 import ejs from 'ejs'
-import path from 'path'
+import { fileURLToPath } from "url";
 
 export const sendOtpEmail = async (
   recipientEmail,
@@ -8,8 +8,9 @@ export const sendOtpEmail = async (
   otp,
   userName
 ) => {
-  const html = await ejs.renderFile(
-    path.join(__dirname, 'templates', 'email.template.ejs'),
+  const templateURL = new URL("../templates/email.template.ejs", import.meta.url);
+  const templatePath = fileURLToPath(templateURL); 
+  const html = await ejs.renderFile( templatePath,
     { otp, userName, expiryMinutes: expirationTime }
   )
   const transporter = nodemailer.createTransport({
@@ -21,12 +22,11 @@ export const sendOtpEmail = async (
   })
 
   let info = await transporter.sendMail({
-    from: '"ArtVenue" <artvenue@gmail.com>',
+    from: `"${process.env.APP_NAME}" <${process.env.EMAIL}>`,
     to: recipientEmail,
-    subject: 'OTP for ArtVenue',
+    subject: `${process.env.OTP_EMAIL_SUBJECT}`,
     text: `Your verification code is: ${otp}. This code will expire in 5 minutes.`,
     html: html
   })
-  console.log('Message sent:', info.messageId)
   return info
 }
