@@ -6,15 +6,16 @@ import {
   artistRegister
 } from '../controllers/auth.controller.js'
 import { verifyEmail, verifyOTP } from '../services/auth.service.js'
+import { validateUser, validateLogin } from '../validators/user.validator.js'
 
 const router = express.Router()
 
 router
   .get('/verify-email', verifyEmail)
-  .post('/registerOwner', ownerRegister)
-  .post('/registerArtist', artistRegister)
+  .post('/registerOwner', validateUser, ownerRegister)
+  .post('/registerArtist', validateUser, artistRegister)
   .post('/verify-otp', verifyOTP)
-  .post('/login', login)
+  .post('/login',validateLogin, login)
   .post('/logout', logout)
 
 export default router
