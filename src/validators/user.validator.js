@@ -56,12 +56,14 @@ export const validateUser = (req, res, next) => {
       otherwise: Joi.forbidden()
     })
   })
-  const { error, value } = userSchema.validate(req.body, {
-    abortEarly: false
-  })
+  const { error, value } = userSchema.validate(req.body)
 
   if (error) {
-    throw new Error(error.details.map((err) => err.message))
+    return res.status(400).json({
+      message: 'Validation error',
+      errors: error.details.map((err) => err.message),
+      success: false
+    })
   }
 
   req.validatedData = value
@@ -83,14 +85,14 @@ export const validateLogin = (req, res, next) => {
     })
   })
 
-  const { error, value } = loginSchema.validate(req.body, {
-    abortEarly: false
-  })
-
-  console.log(value)
+  const { error, value } = loginSchema.validate(req.body)
 
   if (error) {
-    throw new Error(error.details.map((err) => err.message))
+    return res.status(400).json({
+      message: 'Validation error',
+      errors: error.details.map((err) => err.message),
+      success: false
+    })
   }
 
   req.validatedData = value
