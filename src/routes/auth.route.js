@@ -5,14 +5,16 @@ import {
   logout,
   artistRegister
 } from '../controllers/auth.controller.js'
-import { verifyEmail } from '../services/auth.service.js'
+import { verifyEmail, verifyOTP } from '../services/auth.service.js'
 
 const router = express.Router()
 
-router.get('/verify-email', verifyEmail)
-router.post('/registerOwner', ownerRegister)
-router.post('/registerArtist', artistRegister)
-router.post('/login', login)
-router.post('/logout', logout)
+router
+  .get('/verify-email', verifyEmail)
+  .post('/registerOwner', ownerRegister)
+  .post('/registerArtist', artistRegister)
+  .post('/verify-otp', verifyOTP)
+  .post('/login', login)
+  .post('/logout', logout)
 
 export default router

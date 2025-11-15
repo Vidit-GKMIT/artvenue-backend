@@ -1,78 +1,33 @@
-import { ownerSchema, artistSchema } from '../validators/auth.validator.js'
-import { createOwner, createArtist } from '../services/auth.service.js'
+import { userSchema, loginSchema } from '../validators/auth.validator.js'
+import { loginUser } from '../services/auth.service.js'
+import { generateEmailOTP } from '../helpers/auth.helper.js'
+import { client } from '../db/redis.db.js'
+import { sendOtpEmail } from '../services/nodemailer.service.js'
 
-export const ownerRegister = async (req, res) => {
+const ownerRegister = async (req, res) => {
   try {
-    const { error, value } = ownerSchema.validate(req.body, {
-      abortEarly: false
-    })
-    if (error) {
-      return res.status(400).json({
-        success: false,
-        message: 'Validation failed',
-        errors: error.details.map((err) => err.message)
-      })
-    }
-
-    const newOwner = await createOwner(value)
-
-    if (!newOwner) {
-      return res.status(409).json({
-        success: false,
-        message: 'User with this username already exists'
-      })
-    }
-
-    const token = newOwner.token
-    const data = newOwner.user
-
-    return res.status(201).json({
-      success: true,
-      message: 'Owner registered successfully',
-      data,
-      token
-    })
-  } catch (error) {
-    return res.status(500).json({
-      message: 'Internal server error',
-      error: error.message,
-      success: false
-    })
-  }
-}
-
-export const artistRegister = async (req, res) => {
-  try {
-    const { error, value } = artistSchema.validate(req.body, {
+    const { error, value } = userSchema.validate(req.body, {
       abortEarly: false
     })
     if (error) {
       return res.status(400).json({
         success: false,
         message: 'Owner validation failed',
-        errors: error.details.map((e) => e.message)
+        errors: error.details.map((err) => err.message)
       })
     }
 
-    console.log(value)
+    const otp = generateEmailOTP()
+    value.otp = otp
+    await client.set(value.email, JSON.stringify(value), {
+      EX: 60 * 5
+    })
 
-    const newArtist = await createArtist(value)
+    sendOtpEmail(value.email, 5, otp, value.name)
 
-    if (!newArtist) {
-      return res.status(409).json({
-        success: false,
-        message: 'User with this username already exists'
-      })
-    }
-
-    const token = newArtist.token
-    const data = newArtist.user
-
-    return res.status(201).json({
+    res.status(200).json({
       success: true,
-      message: 'Artist registered successfully',
-      data,
-      token
+      message: 'OTP sent to email successfully'
     })
   } catch (error) {
     return res.status(500).json({
@@ -83,10 +38,81 @@ export const artistRegister = async (req, res) => {
   }
 }
 
-export const login = (req, res) => {
-  return res.status(200).json({ message: 'login route' })
+const artistRegister = async (req, res) => {
+  try {
+    const { error, value } = userSchema.validate(req.body, {
+      abortEarly: false
+    })
+    if (error) {
+      return res.status(400).json({
+        success: false,
+        message: 'Artist validation failed',
+        errors: error.details.map((e) => e.message)
+      })
+    }
+
+    const otp = generateEmailOTP()
+    value.otp = otp
+    await client.set(value.email, JSON.stringify(value), {
+      EX: 60 * 5
+    })
+
+    sendOtpEmail(value.email, 5, otp, value.name)
+
+    return res.status(200).json({
+      success: true,
+      message: 'OTP sent to email successfully'
+    })
+  } catch (error) {
+    return res.status(500).json({
+      message: 'Internal server error',
+      error: error.message,
+      success: false
+    })
+  }
 }
 
-export const logout = (req, res) => {
-  return res.status(200).json({ message: 'logout route' })
+const login = (req, res) => {
+  try {
+    const { error, value } = loginSchema.validate(req.body, {
+      abortEarly: false
+    })
+    if (error) {
+      return res.status(400).json({
+        success: false,
+        message: 'Login validation failed',
+        errors: error.details.map((err) => err.message)
+      })
+    }
+
+    const isLoggedIn = loginUser(value)
+
+    if (!isLoggedIn) {
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid username or password'
+      })
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'Login successful',
+      token: isLoggedIn.token,
+      data: isLoggedIn.user
+    })
+  } catch (error) {
+    return res.status(500).json({
+      message: 'Internal server error',
+      error: error.message,
+      success: false
+    })
+  }
 }
+
+const logout = (req, res) => {
+  return res
+    .status(200)
+    .json({ message: 'Logged Out successfully', success: true })
+}
+
+export { ownerRegister, artistRegister, login, logout }

@@ -1,6 +1,6 @@
 import Joi from 'joi'
 
-export const userSchema = Joi.object({
+const userSchema = Joi.object({
   name: Joi.string().required().messages({
     'string.base': 'Name must be a string',
     'string.empty': 'Name cannot be empty',
@@ -55,3 +55,19 @@ export const userSchema = Joi.object({
     otherwise: Joi.forbidden()
   })
 })
+
+const loginSchema = Joi.object({
+  username: Joi.string().required().messages({
+    'string.base': 'Username must be a string',
+    'string.empty': 'Username cannot be empty',
+    'any.required': 'Username is required'
+  }),
+
+  password: Joi.string().required().messages({
+    'string.base': 'Password must be a string',
+    'string.empty': 'Password cannot be empty',
+    'any.required': 'Password is required'
+  })
+})
+
+export { userSchema, loginSchema }

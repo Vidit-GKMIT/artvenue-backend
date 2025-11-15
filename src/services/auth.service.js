@@ -1,8 +1,9 @@
 import { prisma } from '../db/postgres.db.js'
 import bcrypt from 'bcrypt'
 import { createToken } from '../helpers/auth.helper.js'
+import { client } from '../db/redis.db.js'
 
-export const createOwner = async (data) => {
+const createOwner = async (data) => {
   const { name, email, password, role } = data
 
   const existingUser = await prisma.users.findUnique({
@@ -29,7 +30,7 @@ export const createOwner = async (data) => {
   return { user, token }
 }
 
-export const createArtist = async (data) => {
+const createArtist = async (data) => {
   const { name, email, password, role, category, age } = data
   const existingUser = await prisma.users.findUnique({
     where: { name }
@@ -77,7 +78,7 @@ export const createArtist = async (data) => {
   return { user, token }
 }
 
-export const verifyEmail = async (req, res) => {
+const verifyEmail = async (req, res) => {
   try {
     const email = req.body.email
     const existedEmail = await prisma.users.findUnique({
@@ -101,3 +102,90 @@ export const verifyEmail = async (req, res) => {
     })
   }
 }
+
+const verifyOTP = async (req, res) => {
+  try {
+    const { email, otp } = req.body
+    let storedData = await client.get(email)
+    if (!storedData) {
+      return res.status(401).json({
+        message: 'Expired OTP',
+        success: false
+      })
+    }
+
+    storedData = JSON.parse(storedData)
+    let userData = ''
+
+    if (otp !== storedData.otp) {
+      return res.status(401).json({
+        message: 'Invalid OTP',
+        success: false
+      })
+    }
+
+    if (storedData.role === 'Owner') {
+      const ownerData = {
+        name: storedData.name,
+        email: storedData.email,
+        password: storedData.password,
+        role: storedData.role
+      }
+      userData = await createOwner(ownerData)
+    } else {
+      const artistData = {
+        name: storedData.name,
+        email: storedData.email,
+        password: storedData.password,
+        role: storedData.role,
+        category: storedData.category,
+        age: storedData.age
+      }
+      userData = await createArtist(artistData)
+    }
+
+    if (!userData) {
+      return res.status(409).json({
+        success: false,
+        message: 'User with this username already exists'
+      })
+    }
+
+    const { user, token } = userData
+
+    return res.status(201).json({
+      message: 'OTP verified successfully and user created successfully',
+      success: true,
+      data: user,
+      token
+    })
+  } catch (error) {
+    return res.status(500).json({
+      message: 'Internal server error',
+      success: false,
+      error: error.message
+    })
+  }
+}
+
+const loginUser = async (data) => {
+  const { username, password } = data
+
+  const user = await prisma.users.findUnique({
+    where: { name: username }
+  })
+
+  if (!user) {
+    return null
+  }
+
+  const isPasswordValid = await bcrypt.compare(password, user.password)
+  if (!isPasswordValid) {
+    return null
+  }
+
+  const token = createToken({ id: user.id, email: user.email, role: user.role })
+  return { user, token }
+}
+
+export { createOwner, createArtist, verifyEmail, verifyOTP, loginUser }
