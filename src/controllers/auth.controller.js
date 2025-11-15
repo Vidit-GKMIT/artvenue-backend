@@ -6,8 +6,6 @@ const ownerRegister = async (req, res) => {
     const value = req.validatedData
     sendOTPTorecipient(value, 5)
 
-    console.log(info)
-
     res.status(200).json({
       success: true,
       message: 'OTP sent to email successfully'

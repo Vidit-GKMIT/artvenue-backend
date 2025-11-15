@@ -24,7 +24,7 @@ export const sendOtpEmail = async (
   let info = await transporter.sendMail({
     from: `"${process.env.APP_NAME}" <${process.env.EMAIL}>`,
     to: recipientEmail,
-    subject: `${process.env.OTP_EMAIL_SUBJECT}`,
+    subject: 'OTP for ArtVenue',
     html: html
   })
   return info
