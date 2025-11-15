@@ -58,3 +58,20 @@ export const createVenueInDB = async (data) => {
 
     return newVenue;
 }
+
+export const updateVenueInDB = async (venueId, data, ownerId) => {
+  const venue = await prisma.venues.findUnique({
+    where: { owner_id: ownerId},
+  });
+
+  if(!venue){
+    return null;
+  }
+
+  const updatedVenue = await prisma.venues.update({
+    where: { id: parseInt(venueId) },
+    data: data,
+  });
+
+  return updatedVenue;
+}
