@@ -1,5 +1,5 @@
 import express from 'express'
-import { getAllArtists, createVenue, updatVenue, createEvent } from '../controllers/owner.controller.js'
+import { getAllArtists, createVenue, updatVenue, createEvent, getAllOwnerEvents } from '../controllers/owner.controller.js'
 import { validateVenue, validateEvent } from '../validators/owner.validator.js';
 import { authorizeRole } from '../middlewares/verifyRole.middleware.js'
 
@@ -12,5 +12,6 @@ router
   .post("/createVenue", validateVenue, createVenue)
   .patch("/updateVenue/:venueId", validateVenue, updatVenue)
   .post("/createEvent", validateEvent, createEvent)
+  .get("/getAllEvents/:ownerId", getAllOwnerEvents)
 
 export default router
