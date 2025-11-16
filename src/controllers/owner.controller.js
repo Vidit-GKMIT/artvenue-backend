@@ -110,7 +110,8 @@ export const createEvent = async (req, res) => {
 
 export const getAllOwnerEvents = async (req, res) => {
   try {
-    const allEvents = await getAllOwnerEventsFromDB(req.params.ownerId)
+    const ownerId = req.user.id;
+    const allEvents = await getAllOwnerEventsFromDB(ownerId)
 
     if (allEvents === null) {
       return res.status(404).json({

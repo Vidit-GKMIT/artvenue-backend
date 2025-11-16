@@ -130,7 +130,7 @@ export const createEventInDB = async (data, ownerId) => {
 
 export const getAllOwnerEventsFromDB = async (ownerId) => {
   const venue = await prisma.venues.findUnique({
-    where: { owner_id: parseInt(ownerId) }
+    where: { owner_id: ownerId }
   });
 
   if (!venue) {
