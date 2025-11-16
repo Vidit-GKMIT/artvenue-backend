@@ -1,4 +1,4 @@
-import { findAllArtists, createVenueInDB, updateVenueInDB } from '../services/owner.service.js'
+import { findAllArtists, createVenueInDB, updateVenueInDB, createEventInDB } from '../services/owner.service.js'
 
 export const getAllArtists = async (req, res) => {
   try {
@@ -48,7 +48,7 @@ export const updatVenue = async (req,res) => {
     const updateVenueData = await updateVenueInDB(req.params.venueId, data, req.user.id);
 
     if (!updateVenueData) {
-      return res.status(401).json({
+      return res.status(403).json({
         message: 'You are not authorized to update this venue.',
         success: false
       });
@@ -63,4 +63,22 @@ export const updatVenue = async (req,res) => {
   } catch (error) {
     res.status(500).json({ message: 'Internal server error.', success: false,  error: error.message })
   }
+}
+
+export const createEvent = async (req, res) => {
+  const data = req.validatedData;
+  const createdEvent = await createEventInDB(data, req.user.id);
+
+  if(createdEvent === 'Venue not found for the owner.') {
+    return res.status(404).json({
+      message: 'Venue not found for the owner. Please create a venue first.',
+      success: false
+    });
+  }
+
+  return res.status(201).json({
+    message: 'Event created successfully.',
+    data: createdEvent,
+    success: true
+  });
 }
