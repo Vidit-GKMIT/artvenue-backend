@@ -184,6 +184,12 @@ const loginUser = async (data) => {
     return null
   }
 
+  const roleId = user.role_id
+  const roleData = await prisma.roles.findUnique({
+    where: { id: roleId }
+  })
+  user.role = roleData.role
+
   const token = createToken({ id: user.id, email: user.email, role: user.role })
   return { user, token }
 }
