@@ -38,7 +38,7 @@ export const createVenue = async (req, res) => {
     }
 
     res.status(201).json({
-      
+
       message: 'Venue created successfully.',
       data: createdVenue,
       success: true
@@ -125,7 +125,7 @@ export const getAllOwnerEvents = async (req, res) => {
       success: true
     })
   } catch (error) {
-    return res.status(500).json({
+    return res.json({
       message: 'Internal server error',
       success: false,
       error: error.message
