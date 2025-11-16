@@ -15,7 +15,7 @@ export const getAllArtists = async (req, res) => {
       success: true
     })
   } catch (error) {
-    return res.status(500).json({
+    return res.json({
       message: 'Internal server error',
       success: false,
       error: error.message
@@ -30,7 +30,7 @@ export const createVenue = async (req, res) => {
     const createdVenue = await createVenueInDB(data)
 
     if (!createdVenue) {
-      return res.status(400).json({
+      return res.status(409).json({  
         message:
           'Venue already exists for this owner and one owner can have only one venue.',
         success: false
@@ -38,19 +38,17 @@ export const createVenue = async (req, res) => {
     }
 
     res.status(201).json({
+      
       message: 'Venue created successfully.',
       data: createdVenue,
       success: true
     })
   } catch (error) {
-    console.error('Error creating venue:', error)
-    res
-      .status(500)
-      .json({
-        message: 'Internal server error.',
-        success: false,
-        error: error.message
-      })
+    res.json({
+      message: 'Internal server error.',
+      success: false,
+      error: error.message
+    })
   }
 }
 
@@ -76,13 +74,11 @@ export const updatVenue = async (req, res) => {
       success: true
     })
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        message: 'Internal server error.',
-        success: false,
-        error: error.message
-      })
+    res.json({
+      message: 'Internal server error.',
+      success: false,
+      error: error.message
+    })
   }
 }
 
@@ -104,13 +100,11 @@ export const createEvent = async (req, res) => {
       success: true
     })
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        message: 'Internal server error.',
-        success: false,
-        error: error.message
-      })
+    res.json({
+      message: 'Internal server error.',
+      success: false,
+      error: error.message
+    })
   }
 }
 
