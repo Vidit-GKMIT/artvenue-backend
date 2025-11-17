@@ -37,11 +37,10 @@ const artistRegister = async (req, res) => {
   }
 }
 
-const login = (req, res) => {
+const login = async (req, res) => {
   try {
-
     const value = req.validatedData
-    const isLoggedIn = loginUser(value)
+    const isLoggedIn = await loginUser(value)
 
     if (!isLoggedIn) {
       return res.status(401).json({

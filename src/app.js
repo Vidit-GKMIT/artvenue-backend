@@ -1,6 +1,10 @@
 import express from 'express'
 import authRouter from './routes/auth.route.js'
 import cookieParser from 'cookie-parser'
+import artistRouter from './routes/artist.route.js'
+import venueRouter from './routes/venue.route.js'
+import eventRouter from './routes/event.route.js'
+import { protectedRoute } from './middlewares/auth.middleware.js'
 
 const app = express()
 
@@ -10,15 +14,20 @@ app.use(cookieParser())
 
 app.use('/auth', authRouter)
 
+//Owner routes
+app.use('/api/artists', protectedRoute, artistRouter)
+app.use('/api/venues', protectedRoute, venueRouter)
+app.use('/api/events', protectedRoute, eventRouter)
+
 app.get('/', async (req, res) => {
-    res.status(200).json({ message: 'Backend is running...' })
-});
+  res.status(200).json({ message: 'Backend is running...' })
+})
 
 app.use((err, req, res, next) => {
-    return res.status(500).json({
-        message: 'Something went wrong!!',
-        err: err.message,
-    })
+  return res.status(500).json({
+    message: 'Something went wrong!!',
+    err: err.message
+  })
 })
 
 //app.use('*', (req, res) => {
