@@ -10,7 +10,7 @@ const router = express.Router()
 router.use(authorizeRole('Owner'))
 
 router.post('/', validateEvent, createEvent)
-      .get('/events', getAllOwnerEvents)
+      .get('/', getAllOwnerEvents)
 
 export default router
 
