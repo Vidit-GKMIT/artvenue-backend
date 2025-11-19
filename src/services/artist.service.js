@@ -114,7 +114,6 @@ export const sendEmail = async (artistId, eventId) => {
     artistName,
     event.event_name
   )
-  console.log(info)
   return info
 }
 

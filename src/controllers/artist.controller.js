@@ -9,9 +9,10 @@ export const getAllVenues = async (req, res) => {
   try {
     const allEvents = await findAllVenuesFromDB()
     if (!allEvents) {
-      return res.status(404).json({
+      return res.status(200).json({
         message: 'No venues found.',
-        success: false
+        success: true,
+        data : []
       })
     }
     return res.status(200).json({
@@ -57,7 +58,6 @@ export const optInEvent = async (req, res) => {
   try {
     const artistId = req.user.id
     const { eventId } = req.params
-    console.log(artistId)
     if (!eventId) {
       return res.status(400).json({
         message: 'Event ID is required',
@@ -74,8 +74,7 @@ export const optInEvent = async (req, res) => {
       })
      }
 
-    const emailSent = await sendEmail(artistId, eventId)
-    console.log(emailSent)
+    const emailSent = sendEmail(artistId, eventId)
 
     return res.status(200).json({
         success: true,
