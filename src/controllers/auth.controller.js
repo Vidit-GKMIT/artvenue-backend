@@ -1,9 +1,17 @@
 import { sendOTPTorecipient } from '../services/sendOTP.service.js'
 import { loginUser } from '../services/auth.service.js'
+import { checkExistingUser } from '../services/auth.service.js'
 
 const ownerRegister = async (req, res) => {
   try {
     const value = req.validatedData
+    const existingUser = await checkExistingUser(value);
+    if(existingUser) {
+      return res.status(409).json({
+        message: "User already exists",
+        success: false
+      })
+    }
     sendOTPTorecipient(value, 5)
 
     res.status(200).json({
@@ -22,6 +30,13 @@ const ownerRegister = async (req, res) => {
 const artistRegister = async (req, res) => {
   try {
     const value = req.validatedData
+    const existingUser = await checkExistingUser(value);
+    if(existingUser) {
+      return res.status(409).json({
+        message: "User already exists",
+        success: false
+      })
+    }
     sendOTPTorecipient(value, 5)
 
     return res.status(200).json({
