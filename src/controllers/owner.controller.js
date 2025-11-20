@@ -3,8 +3,6 @@ import {
   createVenueInDB,
   updateVenueInDB,
   createEventInDB,
-  getAllOwnerEventsFromDB,
-  getVenueForParticularOwnerFromDB
 } from '../services/owner.service.js'
 
 export const getAllArtists = async (req, res) => {
@@ -103,56 +101,6 @@ export const createEvent = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: 'Internal server error.',
-      success: false,
-      error: error.message
-    })
-  }
-}
-
-export const getAllOwnerEvents = async (req, res) => {
-  try {
-    const ownerId = req.user.id;
-    const allEvents = await getAllOwnerEventsFromDB(ownerId)
-
-    if (allEvents === null) {
-      return res.status(404).json({
-        message: 'No events found for this owner.',
-        success: false
-      })
-    }
-
-    return res.status(200).json({
-      message: 'All events fetched successfully',
-      data: allEvents,
-      success: true
-    })
-  } catch (error) {
-    return res.status(500).json({
-      message: 'Internal server error',
-      success: false,
-      error: error.message
-    })
-  }
-}
-
-export const getVenueForParticularOwner = async (req, res) => { 
-  try {
-    const ownerId = req.user.id;
-    const venue = await getVenueForParticularOwnerFromDB(ownerId);
-    if(!venue){
-      return  res.status(404).json({
-        message: 'No venue found for this owner.',
-        success: false
-      })
-    }
-    return res.status(200).json({
-      message: 'Venue fetched successfully',
-      data: venue,
-      success: true
-    })
-  } catch (error) {
-    return res.status(500).json({
-      message: 'Internal server error',
       success: false,
       error: error.message
     })

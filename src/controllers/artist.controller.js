@@ -1,59 +1,7 @@
 import {
-  findAllVenuesFromDB,
-  findAllEventsFromDB,
   sendEmail, 
   createOptInEntry,
 } from '../services/artist.service.js'
-
-export const getAllVenues = async (req, res) => {
-  try {
-    const allEvents = await findAllVenuesFromDB();
-
-    if (!allEvents) {
-      return res.status(200).json({
-        message: 'No venues found.',
-        success: true,
-        data : []
-      })
-    }
-    return res.status(200).json({
-      message: 'All venues fetched successfully',
-      data: allEvents,
-      success: true
-    })
-  } catch (error) {
-    return res.status(500).json({
-      message: 'Internal server error',
-      success: false,
-      error: error.message
-    })
-  }
-}
-
-export const getAllEvents = async (req, res) => {
-  try {
-    const userId = req.user.id;
-    const allEvents = await findAllEventsFromDB(userId)
-    if (!allEvents) {
-      return res.status(404).json({
-        message: 'No events found',
-        success: false
-      })
-    }
-
-    return res.status(200).json({
-      message: 'All events fetched successfully',
-      data: allEvents,
-      success: true
-    })
-  } catch (error) {
-    return res.status(500).json({
-      message: 'Internal server error',
-      success: false,
-      error: error.message
-    })
-  }
-}
 
 export const optInEvent = async (req, res) => {
   try {
