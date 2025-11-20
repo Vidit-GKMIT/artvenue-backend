@@ -3,7 +3,8 @@ import {
   createVenueInDB,
   updateVenueInDB,
   createEventInDB,
-  getAllOwnerEventsFromDB
+  getAllOwnerEventsFromDB,
+  getVenueForParticularOwnerFromDB
 } from '../services/owner.service.js'
 
 export const getAllArtists = async (req, res) => {
@@ -15,7 +16,7 @@ export const getAllArtists = async (req, res) => {
       success: true
     })
   } catch (error) {
-    return res.json({
+    return res.status(500).json({
       message: 'Internal server error',
       success: false,
       error: error.message
@@ -44,7 +45,7 @@ export const createVenue = async (req, res) => {
       success: true
     })
   } catch (error) {
-    res.json({
+    res.status(500).json({
       message: 'Internal server error.',
       success: false,
       error: error.message
@@ -52,7 +53,7 @@ export const createVenue = async (req, res) => {
   }
 }
 
-export const updatVenue = async (req, res) => {
+export const updateVenue = async (req, res) => {
   try {
     const data = req.validatedData
     const updateVenueData = await updateVenueInDB(
@@ -74,7 +75,7 @@ export const updatVenue = async (req, res) => {
       success: true
     })
   } catch (error) {
-    res.json({
+    res.status(500).json({
       message: 'Internal server error.',
       success: false,
       error: error.message
@@ -100,7 +101,7 @@ export const createEvent = async (req, res) => {
       success: true
     })
   } catch (error) {
-    res.json({
+    res.status(500).json({
       message: 'Internal server error.',
       success: false,
       error: error.message
@@ -126,7 +127,31 @@ export const getAllOwnerEvents = async (req, res) => {
       success: true
     })
   } catch (error) {
-    return res.json({
+    return res.status(500).json({
+      message: 'Internal server error',
+      success: false,
+      error: error.message
+    })
+  }
+}
+
+export const getVenueForParticularOwner = async (req, res) => { 
+  try {
+    const ownerId = req.user.id;
+    const venue = await getVenueForParticularOwnerFromDB(ownerId);
+    if(!venue){
+      return  res.status(404).json({
+        message: 'No venue found for this owner.',
+        success: false
+      })
+    }
+    return res.status(200).json({
+      message: 'Venue fetched successfully',
+      data: venue,
+      success: true
+    })
+  } catch (error) {
+    return res.status(500).json({
       message: 'Internal server error',
       success: false,
       error: error.message

@@ -5,14 +5,18 @@ import artistRouter from './routes/artist.route.js'
 import venueRouter from './routes/venue.route.js'
 import eventRouter from './routes/event.route.js'
 import { protectedRoute } from './middlewares/auth.middleware.js'
+import cors from 'cors'
 
 const app = express()
+
+const allowedOrigins = ["http://localhost:5174", "http://localhost:5173"];
+app.use(cors({ origin: allowedOrigins, credentials: true }));
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
 
-app.use('/auth', authRouter)
+app.use('/api/auth', authRouter)
 
 //Owner routes
 app.use('/api/artists', protectedRoute, artistRouter)
@@ -26,7 +30,7 @@ app.get('/', async (req, res) => {
 app.use((err, req, res, next) => {
   return res.status(500).json({
     message: 'Something went wrong!!',
-    err: err.message
+    error: err.message
   })
 })
 
