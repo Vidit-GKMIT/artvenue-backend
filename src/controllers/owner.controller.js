@@ -3,7 +3,6 @@ import {
   createVenueInDB,
   updateVenueInDB,
   createEventInDB,
-  getAllOwnerEventsFromDB
 } from '../services/owner.service.js'
 
 export const getAllArtists = async (req, res) => {
@@ -15,7 +14,7 @@ export const getAllArtists = async (req, res) => {
       success: true
     })
   } catch (error) {
-    return res.json({
+    return res.status(500).json({
       message: 'Internal server error',
       success: false,
       error: error.message
@@ -44,7 +43,7 @@ export const createVenue = async (req, res) => {
       success: true
     })
   } catch (error) {
-    res.json({
+    res.status(500).json({
       message: 'Internal server error.',
       success: false,
       error: error.message
@@ -52,7 +51,7 @@ export const createVenue = async (req, res) => {
   }
 }
 
-export const updatVenue = async (req, res) => {
+export const updateVenue = async (req, res) => {
   try {
     const data = req.validatedData
     const updateVenueData = await updateVenueInDB(
@@ -74,7 +73,7 @@ export const updatVenue = async (req, res) => {
       success: true
     })
   } catch (error) {
-    res.json({
+    res.status(500).json({
       message: 'Internal server error.',
       success: false,
       error: error.message
@@ -100,34 +99,8 @@ export const createEvent = async (req, res) => {
       success: true
     })
   } catch (error) {
-    res.json({
+    res.status(500).json({
       message: 'Internal server error.',
-      success: false,
-      error: error.message
-    })
-  }
-}
-
-export const getAllOwnerEvents = async (req, res) => {
-  try {
-    const ownerId = req.user.id;
-    const allEvents = await getAllOwnerEventsFromDB(ownerId)
-
-    if (allEvents === null) {
-      return res.status(404).json({
-        message: 'No events found for this owner.',
-        success: false
-      })
-    }
-
-    return res.status(200).json({
-      message: 'All events fetched successfully',
-      data: allEvents,
-      success: true
-    })
-  } catch (error) {
-    return res.json({
-      message: 'Internal server error',
       success: false,
       error: error.message
     })

@@ -5,9 +5,8 @@ import {
 import { authorizeRole } from '../middlewares/verifyRole.middleware.js'
 
 const router = express.Router()
-router.use(authorizeRole('Owner'))
 
-router.get('/', getAllArtists)
+router.get('/', authorizeRole('Owner'), getAllArtists) // for venue owner to see all artists
 export default router 
 
 
