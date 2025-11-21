@@ -10,5 +10,5 @@ export const sendOTPTorecipient = async (value, expirationTime) => {
   })
 
   sendOtpEmail(value.email, expirationTime, OTP, value.name)
-//   return info;
+  //   return info;
 }

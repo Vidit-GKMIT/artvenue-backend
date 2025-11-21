@@ -2,22 +2,25 @@ import Joi from 'joi'
 
 export const validateUser = (req, res, next) => {
   const userSchema = Joi.object({
-    name: Joi.string().required().messages({
+    name: Joi.string().max(25).required().messages({
       'string.base': 'Name must be a string',
       'string.empty': 'Name cannot be empty',
+      'string.max': 'Name cannot be more than 25 characters',
       'any.required': 'Name is required'
     }),
 
-    email: Joi.string().email().required().messages({
+    email: Joi.string().email().max(40).required().messages({
       'string.base': 'Email must be a string',
       'string.empty': 'Email cannot be empty',
+      'string.max': 'Email cannot be more than 40 characters',
       'any.required': 'Email is required',
       'string.email': 'Please enter a valid email address'
     }),
 
-    password: Joi.string().required().messages({
+    password: Joi.string().max(80).required().messages({
       'string.base': 'Password must be a string',
       'string.empty': 'Password cannot be empty',
+      'string.max': 'Password cannot be more than 80 characters',
       'any.required': 'Password is required'
     }),
 
@@ -72,10 +75,12 @@ export const validateUser = (req, res, next) => {
 
 export const validateLogin = (req, res, next) => {
   const loginSchema = Joi.object({
-    username: Joi.string().required().messages({
-      'string.base': 'Username must be a string',
-      'string.empty': 'Username cannot be empty',
-      'any.required': 'Username is required'
+    email: Joi.string().email().max(40).required().messages({
+      'string.base': 'Email must be a string',
+      'string.empty': 'Email cannot be empty',
+      'string.max': 'Email cannot be more than 40 characters',
+      'any.required': 'Email is required',
+      'string.email': 'Please enter a valid email address'
     }),
 
     password: Joi.string().required().messages({

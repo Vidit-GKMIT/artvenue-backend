@@ -12,10 +12,10 @@ const router = express.Router()
 
 router
   .get('/verify-email', verifyEmail)
-  .post('/registerOwner', validateUser, ownerRegister)
-  .post('/registerArtist', validateUser, artistRegister)
+  .post('/register-owner', validateUser, ownerRegister)
+  .post('/register-artist', validateUser, artistRegister)
   .post('/verify-otp', verifyOTP)
-  .post('/login',validateLogin, login)
+  .post('/login', validateLogin, login)
   .post('/logout', logout)
 
 export default router
