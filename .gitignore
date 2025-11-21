@@ -144,3 +144,5 @@ prisma/generated/
 prisma/migrations/
 
 .DS_Store
+coverage
+str.md

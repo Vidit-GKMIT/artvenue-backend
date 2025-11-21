@@ -1,4 +1,4 @@
-import { sendOTPTorecipient } from '../services/sendOTP.service.js'
+import { sendOTPTorecipient } from '../services/sendOtp.service.js'
 import { loginUser } from '../services/auth.service.js'
 import { checkExistingUser } from '../services/auth.service.js'
 

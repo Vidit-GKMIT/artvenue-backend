@@ -6,14 +6,6 @@ import { client } from '../db/redis.db.js'
 const createOwner = async (data) => {
   const { name, email, password, role } = data
 
-  const existingUser = await prisma.users.findUnique({
-    where: { name }
-  })
-
-  if (existingUser) {
-    return null
-  }
-
   const hashPassword = await bcrypt.hash(password, 10)
   const user = await prisma.users.create({
     data: {
@@ -27,18 +19,13 @@ const createOwner = async (data) => {
   })
 
   const token = createToken({ id: user.id, email: user.email, role: role })
+  user.role = 'Owner'
+  user.password = null
   return { user, token }
 }
 
 const createArtist = async (data) => {
   const { name, email, password, role, category, age } = data
-  const existingUser = await prisma.users.findUnique({
-    where: { name }
-  })
-
-  if (existingUser) {
-    return null
-  }
 
   const hashPassword = await bcrypt.hash(password, 10)
 
@@ -75,6 +62,10 @@ const createArtist = async (data) => {
   })
 
   const token = createToken({ id: user.id, email: user.email, role: role })
+  user.categories = category
+  user.age = artistData.age
+  user.role = 'Artist'
+  user.password = null
   return { user, token }
 }
 
@@ -107,6 +98,7 @@ const verifyOTP = async (req, res) => {
   try {
     const { email, otp } = req.body
     let storedData = await client.get(email)
+    console.log(storedData)
     if (!storedData) {
       return res.status(401).json({
         message: 'Expired OTP',
@@ -152,6 +144,7 @@ const verifyOTP = async (req, res) => {
     }
 
     const { user, token } = userData
+    client.del(user.email)
 
     return res.status(201).json({
       message: 'OTP verified successfully and user created successfully',
@@ -169,11 +162,24 @@ const verifyOTP = async (req, res) => {
 }
 
 const loginUser = async (data) => {
-  const { username, password } = data
+  const { email, password } = data
 
   const user = await prisma.users.findUnique({
-    where: { name: username }
+    where: { email: email },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      password: true,
+      role: {
+        select: {
+          role: true // or whatever field you need from the role table
+        }
+      }
+    }
   })
+
+  console.log(user)
 
   if (!user) {
     return null
@@ -184,14 +190,38 @@ const loginUser = async (data) => {
     return null
   }
 
-  const roleId = user.role_id
-  const roleData = await prisma.roles.findUnique({
-    where: { id: roleId }
+  const token = createToken({
+    id: user.id,
+    email: user.email,
+    role: user.role.role
   })
-  user.role = roleData.role
-
-  const token = createToken({ id: user.id, email: user.email, role: user.role })
+  user.password = null
   return { user, token }
 }
 
-export { createOwner, createArtist, verifyEmail, verifyOTP, loginUser }
+const checkExistingUser = async (value) => {
+  const email = value.email
+  console.log(email)
+
+  const existingUser = await prisma.users.findUnique({
+    where: {
+      email: email
+    }
+  })
+  console.log(existingUser)
+
+  if (existingUser) {
+    return true
+  }
+
+  return false
+}
+
+export {
+  createOwner,
+  createArtist,
+  verifyEmail,
+  verifyOTP,
+  loginUser,
+  checkExistingUser
+}
