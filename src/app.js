@@ -24,7 +24,7 @@ app.use('/api/venues', protectedRoute, venueRouter)
 app.use('/api/events', protectedRoute, eventRouter)
 
 app.get('/', async (req, res) => {
-  res.status(200).json({ message: 'Backend is running...' })
+  res.status(200).json({ message: 'Backend is running....' })
 })
 
 app.use((err, req, res, next) => {
