@@ -5,19 +5,23 @@
     "main": "src/server.js",
     "type": "module",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
+        "test": "NODE_ENV=test node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand",
         "dev": "nodemon src/server.js",
         "format": "prettier --write .",
         "lint": "eslint . ",
-        "lint:fix": "eslint . --fix "
+        "lint:fix": "eslint . --fix ",
+        "test:coverage": "NODE_OPTIONS=--experimental-vm-modules jest --coverage"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "devDependencies": {
         "@eslint/js": "^9.39.1",
+        "@jest/globals": "^30.2.0",
+        "@types/node": "^24.10.1",
         "eslint": "^9.39.1",
         "globals": "^16.5.0",
+        "jest": "^30.2.0",
         "nodemon": "^3.1.10",
         "prettier": "^3.6.2",
         "prisma": "^6.19.0"
@@ -26,6 +30,7 @@
         "@prisma/client": "^6.19.0",
         "bcrypt": "^6.0.0",
         "cookie-parser": "^1.4.7",
+        "cors": "^2.8.5",
         "dotenv": "^17.2.3",
         "ejs": "^3.1.10",
         "express": "^5.1.0",
