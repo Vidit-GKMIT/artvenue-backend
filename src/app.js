@@ -9,7 +9,7 @@ import cors from 'cors'
 
 const app = express()
 
-const allowedOrigins = ["http://localhost:5174", "http://localhost:5173"];
+const allowedOrigins = ["http://localhost:5174", "http://localhost:5173", "https://artvenue-frontend.vercel.app"];
 app.use(cors({ origin: allowedOrigins, credentials: true }));
 
 app.use(express.json())
