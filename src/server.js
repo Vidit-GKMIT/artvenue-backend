@@ -10,6 +10,5 @@ await connectRedis()
 const PORT = process.env.PORT
 
 app.listen(PORT, () => {
-    console.log(`App is running on post ${PORT}`)
+  console.log(`App is running on post ${PORT}`)
 })
-

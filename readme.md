@@ -16,14 +16,14 @@ ArtVenue solves this problem by allowing **artists to list their profiles** and 
 ### **Venue Owner**
 
 - A venue owner can:
-    - List only **one venue** (for now).
-    - Create **multiple events** for that venue.
+  - List only **one venue** (for now).
+  - Create **multiple events** for that venue.
 
 ### **Artist**
 
 - Artists can:
-    - View all **available events**.
-    - **Opt in** for any event they are interested in.
+  - View all **available events**.
+  - **Opt in** for any event they are interested in.
 
 ## Tech Stack
 
