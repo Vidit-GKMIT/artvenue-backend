@@ -8,7 +8,8 @@ async function connectPostgres() {
   const schema = process.env.DB_SCHEMA
   const database = process.env.DATABASE
 
-  process.env.DATABASE_URL = `postgresql://${userName}:${password}@${host}/${database}?schema=${schema}`
+  // process.env.DATABASE_URL = `postgresql://${userName}:${password}@${host}/${database}?schema=${schema}`
+  // removed for production
   try {
     await prisma.$connect()
     console.log('Postgres connected successfully')
