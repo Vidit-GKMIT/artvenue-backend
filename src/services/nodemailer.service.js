@@ -48,7 +48,7 @@ export const optInEmail = async (ownerEmail, ownerName, artistEmail, artistName,
     from: `"${process.env.APP_NAME}" <${process.env.EMAIL}>`,
     to: ownerEmail,
     subject: 'Inquiry',
-    text: `Hello ${ownerName},\n\nArtist ${artistName} (${artistEmail}) has shown interest in your event "${event_name}". Please get in touch with them for further details.\n\nBest regards,\nArtVenue Team`
+    text: `Hello ${ownerName},\n\nArtist ${artistName} (${artistEmail}) has shown interest in your event "${event_name}". Please get in touch with them.\n\nBest regards,\nArtVenue Team`
   })
   return info; 
   }

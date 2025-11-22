@@ -9,12 +9,13 @@ export const validateUser = (req, res, next) => {
       'any.required': 'Name is required'
     }),
 
-    email: Joi.string().email().max(40).required().messages({
+    email: Joi.string().email().pattern(/^[a-z]/).max(40).required().messages({
       'string.base': 'Email must be a string',
       'string.empty': 'Email cannot be empty',
       'string.max': 'Email cannot be more than 40 characters',
       'any.required': 'Email is required',
-      'string.email': 'Please enter a valid email address'
+      'string.email': 'Please enter a valid email address',
+      "string.pattern.base": "Email must start with a lowercase letter (a-z)"
     }),
 
     password: Joi.string().max(80).required().messages({
