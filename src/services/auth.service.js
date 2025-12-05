@@ -98,7 +98,6 @@ const verifyOTP = async (req, res) => {
   try {
     const { email, otp } = req.body
     let storedData = await client.get(email)
-    console.log(storedData)
     if (!storedData) {
       return res.status(401).json({
         message: 'Expired OTP',
@@ -179,7 +178,6 @@ const loginUser = async (data) => {
     }
   })
 
-  console.log(user)
 
   if (!user) {
     return null
@@ -201,14 +199,12 @@ const loginUser = async (data) => {
 
 const checkExistingUser = async (value) => {
   const email = value.email
-  console.log(email)
 
   const existingUser = await prisma.users.findUnique({
     where: {
       email: email
     }
   })
-  console.log(existingUser)
 
   if (existingUser) {
     return true
